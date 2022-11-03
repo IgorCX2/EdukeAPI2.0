@@ -36,6 +36,20 @@ router.post('/cad-user', async (req, res) =>{
     });
   });
 });
+router.post('/user-id', async (req, res) =>{
+  console.log(req.body);
+  const doc = new GoogleSpreadsheet('1FJK-uyJ2gUQSH--XNAjrAdWihmS7zdJ_gvo7TQzgrhA');
+  await doc.useServiceAccountAuth({
+      client_email: credentials.client_email,
+      private_key: credentials.private_key,
+  });
+  await doc.loadInfo();
+  const sheet = doc.sheetsByIndex[0];
+  const rows = await sheet.getRows();
+  return res.json({
+    estado: rows[req.body.id].estado
+  });
+});
 router.get('/list-user', async (req, res) =>{
   const doc = new GoogleSpreadsheet('1FJK-uyJ2gUQSH--XNAjrAdWihmS7zdJ_gvo7TQzgrhA');
   await doc.useServiceAccountAuth({
@@ -63,5 +77,4 @@ router.get('/list-user', async (req, res) =>{
     primarykey: Number(rows[0].primarykey)
   })
 });
-
-  module.exports = router;
+module.exports = router;
