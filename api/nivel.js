@@ -35,7 +35,7 @@ router.post('/nivel', async (req, res) =>{
             const position = pegarinfobd.indexOf(filtro.toString())
             const pegarvalor = pegarinfobd[position].split('=')
             const mudarvalor = Number(pegarvalor[0])+Number(nivel[0])
-            pegarinfobd[position] = `${pegarvalor[1]}=${mudarvalor}`
+            pegarinfobd[position] = `${mudarvalor}=${pegarvalor[1]}`
             console.log("existe =(")
             /*console.log(filtro)
             console.log(` ${pegarvalor[1]} + ${nivel[1]} = ${mudarvalor}`)
