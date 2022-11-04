@@ -29,13 +29,13 @@ router.post('/nivel', async (req, res) =>{
     };
     req.body.nivel.split(',').map((valor) => {
         const nivel = valor.split('=')
-        const filtro = filterItems(nivel[0])
-        console.log(`valor procurado ${nivel[0]}`)
+        const filtro = filterItems(nivel[1])
+        console.log(`valor procurado ${nivel[1]}`)
         if(filtro.length > 0){
             const position = pegarinfobd.indexOf(filtro.toString())
             const pegarvalor = pegarinfobd[position].split('=')
-            const mudarvalor = Number(pegarvalor[1])+Number(nivel[1])
-            pegarinfobd[position] = `${pegarvalor[0]}=${mudarvalor}`
+            const mudarvalor = Number(pegarvalor[0])+Number(nivel[0])
+            pegarinfobd[position] = `${pegarvalor[1]}=${mudarvalor}`
             console.log("existe =(")
             /*console.log(filtro)
             console.log(` ${pegarvalor[1]} + ${nivel[1]} = ${mudarvalor}`)

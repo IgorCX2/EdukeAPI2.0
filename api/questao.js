@@ -31,7 +31,7 @@ router.post('/questao', async (req, res) =>{
     console.log(filterItems(`${materia}:${conteudo}`).length)
     while(filterItems(`${materia}:${conteudo}`).length > 0 && contador == 0){
         const valor = filterItems(`${materia}:${conteudo}`).toString().split('=')
-        if(Number(valor[1]) > 9 || Number(valor[1]) < -3){
+        if(Number(valor[0]) > 9 || Number(valor[0]) < -3){
             materia = Math.floor(Math.random() * 2)
             conteudo = Math.floor(Math.random() * 2)
             console.log(`novamente ${materia}:${conteudo}`)

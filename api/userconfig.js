@@ -36,6 +36,21 @@ router.post('/cad-user', async (req, res) =>{
     });
   });
 });
+router.post('/cad-nivel', async (req, res) =>{
+  console.log(req.body);
+  const doc = new GoogleSpreadsheet('1IERSb6NCGMTjX8O20E305NU-F5Zi-5953F3OGk_GdFc');
+  await doc.useServiceAccountAuth({
+      client_email: credentials.client_email,
+      private_key: credentials.private_key,
+  });
+  await doc.loadInfo();
+  const sheet = doc.sheetsByIndex[0];
+  const larryRow = await sheet.addRow({nivel: "0=0:0"});
+  await larryRow.save()
+  return res.json({
+    mgs: "cadastrado"
+  });
+});
 router.post('/user-id', async (req, res) =>{
   console.log(req.body);
   const doc = new GoogleSpreadsheet('1FJK-uyJ2gUQSH--XNAjrAdWihmS7zdJ_gvo7TQzgrhA');
@@ -48,6 +63,22 @@ router.post('/user-id', async (req, res) =>{
   const rows = await sheet.getRows();
   return res.json({
     estado: rows[req.body.id].estado
+  });
+});
+router.post('/mudar-status', async (req, res) =>{
+  console.log(req.body);
+  const doc = new GoogleSpreadsheet('1FJK-uyJ2gUQSH--XNAjrAdWihmS7zdJ_gvo7TQzgrhA');
+  await doc.useServiceAccountAuth({
+      client_email: credentials.client_email,
+      private_key: credentials.private_key,
+  });
+  await doc.loadInfo();
+  const sheet = doc.sheetsByIndex[0];
+  const rows = await sheet.getRows();
+  rows[req.body.id].estado = req.body.status;
+  await rows[req.body.id].save();
+  return res.json({
+    status: rows[req.body.id].estado
   });
 });
 router.get('/list-user', async (req, res) =>{
