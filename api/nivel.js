@@ -58,4 +58,29 @@ router.post('/nivel', async (req, res) =>{
       });
     });
 });
+
+router.post('/historico', async (req, res) =>{
+  console.log(req.body);
+  var status = "N"
+  const doc = new GoogleSpreadsheet('1IERSb6NCGMTjX8O20E305NU-F5Zi-5953F3OGk_GdFc');
+  await doc.useServiceAccountAuth({
+      client_email: credentials.client_email,
+      private_key: credentials.private_key,
+  });
+  await doc.loadInfo();
+  const sheet = doc.sheetsByIndex[0];
+  const rows = await sheet.getRows();
+  const historicoarraybd = rows[req.body.id].historico.toString().split(',')
+  const filterItems = (query) => {
+    return historicoarraybd?.filter(el => el.toLowerCase().indexOf(query.toLowerCase()) > -1);
+  };
+  if(filterItems(req.body.cod).length > 0){
+    status = "feito"
+  }
+  console.log(filterItems(req.body.cod))
+  console.log(status)
+  return res.json({
+    status: status
+  });
+});
 module.exports = router;

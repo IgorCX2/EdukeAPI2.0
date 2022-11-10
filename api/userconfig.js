@@ -73,14 +73,41 @@ router.post('/mudar-status', async (req, res) =>{
       private_key: credentials.private_key,
   });
   await doc.loadInfo();
+  console.log
   const sheet = doc.sheetsByIndex[0];
   const rows = await sheet.getRows();
-  rows[req.body.id].estado = req.body.status;
+  var newstatus = []
+  const statusantigo = rows[req.body.id].estado.toString().split(',')
+  const filterItemsRes = (query) => {
+    return statusantigo?.filter(el => el.toLowerCase().indexOf(query.toLowerCase()) > -1);
+  };
+  newstatus = filterItemsRes(req.body.newstatus)
+  statusantigo.splice(statusantigo.indexOf(newstatus), 1)
+  rows[req.body.id].estado = statusantigo.toString()
+  console.log(rows[req.body.id].estado)
   await rows[req.body.id].save();
   return res.json({
     status: rows[req.body.id].estado
   });
 });
+
+router.post('/add-plain', async (req, res) =>{
+  console.log(req.body);
+  const doc = new GoogleSpreadsheet('1FJK-uyJ2gUQSH--XNAjrAdWihmS7zdJ_gvo7TQzgrhA');
+  await doc.useServiceAccountAuth({
+      client_email: credentials.client_email,
+      private_key: credentials.private_key,
+  });
+  await doc.loadInfo();
+  const sheet = doc.sheetsByIndex[0];
+  const rows = await sheet.getRows();
+  rows[req.body.id].estado = `${rows[req.body.id].estado},${req.body.estado}`;
+  await rows[req.body.id].save();
+  return res.json({
+    status: rows[req.body.id].estado
+  });
+});
+
 router.get('/list-user', async (req, res) =>{
   const doc = new GoogleSpreadsheet('1FJK-uyJ2gUQSH--XNAjrAdWihmS7zdJ_gvo7TQzgrhA');
   await doc.useServiceAccountAuth({
